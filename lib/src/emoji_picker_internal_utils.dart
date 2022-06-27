@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:emoji_picker_flutter/src/emoji_skin_tones.dart';
+import 'package:flutter/foundation.dart' as found;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'emoji_lists.dart' as emoji_list;
@@ -86,7 +87,7 @@ class EmojiPickerInternalUtils {
     ]);
 
     final futures = allCategoryEmoji.entries
-        .map((e) => _getAvailableEmojis(e.value, title: e.key.name));
+        .map((e) => _getAvailableEmojis(e.value, title: e.key.name.toString()));
 
     final allAvailableEmojis = await Future.wait(futures);
 
@@ -104,7 +105,7 @@ class EmojiPickerInternalUtils {
   /// Check if emoji is available on current platform
   Future<Map<String, String>?> _getPlatformAvailableEmoji(
       Map<String, String> emoji) async {
-    if (Platform.isAndroid) {
+    if (found.defaultTargetPlatform.name == 'android') {
       Map<String, String>? filtered = {};
       var delimiter = '|';
       try {

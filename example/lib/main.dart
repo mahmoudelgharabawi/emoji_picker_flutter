@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/foundation.dart' as found;
 import 'package:flutter/material.dart';
 
 void main() {
@@ -107,8 +108,10 @@ class _MyAppState extends State<MyApp> {
                     onBackspacePressed: _onBackspacePressed,
                     config: Config(
                         columns: 7,
-                        // Issue: https://github.com/flutter/flutter/issues/28894
-                        emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
+                        emojiSizeMax: 32 *
+                            (found.defaultTargetPlatform.name == 'iOS'
+                                ? 1.30
+                                : 1.0),
                         verticalSpacing: 0,
                         horizontalSpacing: 0,
                         gridPadding: EdgeInsets.zero,
