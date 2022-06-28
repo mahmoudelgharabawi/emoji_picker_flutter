@@ -108,10 +108,7 @@ class _MyAppState extends State<MyApp> {
                     onBackspacePressed: _onBackspacePressed,
                     config: Config(
                         columns: 7,
-                        emojiSizeMax: 32 *
-                            (found.defaultTargetPlatform.name == 'iOS'
-                                ? 1.30
-                                : 1.0),
+                        emojiSizeMax: 32,
                         verticalSpacing: 0,
                         horizontalSpacing: 0,
                         gridPadding: EdgeInsets.zero,
@@ -124,16 +121,15 @@ class _MyAppState extends State<MyApp> {
                         backspaceColor: Colors.blue,
                         skinToneDialogBgColor: Colors.white,
                         skinToneIndicatorColor: Colors.grey,
-                        enableSkinTones: true,
-                        showRecentsTab: true,
+                        enableSkinTones: false,
+                        showRecentsTab: false,
                         recentsLimit: 28,
-                        replaceEmojiOnLimitExceed: false,
+                        replaceEmojiOnLimitExceed: true,
                         noRecents: const Text(
                           'No Recents',
                           style: TextStyle(fontSize: 20, color: Colors.black26),
                           textAlign: TextAlign.center,
                         ),
-                        tabIndicatorAnimDuration: kTabScrollDuration,
                         categoryIcons: const CategoryIcons(),
                         buttonMode: ButtonMode.MATERIAL)),
               ),

@@ -91,7 +91,8 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final emojiSize = widget.config.getEmojiSize(constraints.maxWidth);
+        // final emojiSize = widget.config.getEmojiSize(constraints.maxWidth);
+        final emojiSize = widget.config.emojiSizeMax;
 
         return Container(
           color: widget.config.bgColor,
@@ -126,18 +127,56 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
               ),
               Flexible(
                 child: PageView.builder(
-                  itemCount: widget.state.categoryEmoji.length,
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    _tabController!.animateTo(
-                      index,
-                      duration: widget.config.tabIndicatorAnimDuration,
-                    );
-                  },
-                  itemBuilder: (context, index) =>
-                      _buildPage(emojiSize, widget.state.categoryEmoji[index]),
-                ),
+                    itemCount: widget.state.categoryEmoji.length,
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      _tabController?.animateTo(
+                        index,
+                        duration: widget.config.tabIndicatorAnimDuration,
+                      );
+                    },
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: _buildButtonWidget(
+                          onPressed: () {},
+                          onLongPressed: () {},
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            physics: const ScrollPhysics(),
+                            controller: _scrollController,
+                            child: Wrap(
+                              children: [
+                                ..._buildEmoji(
+                                  emojiSize,
+                                  widget.state.categoryEmoji[index],
+                                  widget.state.categoryEmoji[index].emoji,
+                                  widget.config.enableSkinTones,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    // _buildPage(emojiSize, widget.state.categoryEmoji[index]),
+                    ),
               ),
+
+              // Flexible(
+              //   child: PageView.builder(
+              //     itemCount: widget.state.categoryEmoji.length,
+              //     controller: _pageController,
+              //     onPageChanged: (index) {
+              //       _tabController?.animateTo(
+              //         index,
+              //         duration: widget.config.tabIndicatorAnimDuration,
+              //       );
+              //     },
+              //     itemBuilder: (context, index) =>
+              //         _buildPage(emojiSize, widget.state.categoryEmoji[index]),
+              //   ),
+              // ),
             ],
           ),
         );
@@ -153,88 +192,98 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
     );
   }
 
-  Widget _buildPage(double emojiSize, CategoryEmoji categoryEmoji) {
-    // Display notice if recent has no entries yet
-    if (categoryEmoji.category == Category.RECENT &&
-        categoryEmoji.emoji.isEmpty) {
-      return _buildNoRecent();
-    }
-    // Build page normally
-    return GestureDetector(
-      onTap: _closeSkinToneDialog,
-      child: GridView.count(
-        scrollDirection: Axis.vertical,
-        physics: const ScrollPhysics(),
-        controller: _scrollController,
-        shrinkWrap: true,
-        primary: false,
-        padding: widget.config.gridPadding,
-        crossAxisCount: widget.config.columns,
-        mainAxisSpacing: widget.config.verticalSpacing,
-        crossAxisSpacing: widget.config.horizontalSpacing,
-        children: categoryEmoji.emoji.asMap().entries.map((item) {
-          final index = item.key;
-          final emoji = item.value;
-          final onPressed = () {
-            _closeSkinToneDialog();
-            widget.state.onEmojiSelected(categoryEmoji.category, emoji);
-          };
+  // Widget _buildPage(double emojiSize, CategoryEmoji categoryEmoji) {
+  //   // Display notice if recent has no entries yet
+  //   if (categoryEmoji.category == Category.RECENT &&
+  //       categoryEmoji.emoji.isEmpty) {
+  //     return _buildNoRecent();
+  //   }
+  //   // Build page normally
+  //   return GestureDetector(
+  //     onTap: _closeSkinToneDialog,
+  //     child: SingleChildScrollView(
+  //       scrollDirection: Axis.vertical,
+  //       physics: const ScrollPhysics(),
+  //       controller: _scrollController,
+  //       child: Wrap(
+  //         // scrollDirection: Axis.vertical,
+  //         // physics: const ScrollPhysics(),
+  //         // controller: _scrollController,
+  //         // shrinkWrap: true,
+  //         // primary: false,
+  //         // padding: widget.config.gridPadding,
+  //         // crossAxisCount: widget.config.columns,
+  //         // mainAxisSpacing: widget.config.verticalSpacing,
+  //         // crossAxisSpacing: widget.config.horizontalSpacing,
+  //         children: categoryEmoji.emoji.asMap().entries.map((item) {
+  //           final index = item.key;
+  //           final emoji = item.value;
+  //           final onPressed = () {
+  //             _closeSkinToneDialog();
+  //             widget.state.onEmojiSelected(categoryEmoji.category, emoji);
+  //           };
 
-          final onLongPressed = () {
-            if (!emoji.hasSkinTone || !widget.config.enableSkinTones) {
-              _closeSkinToneDialog();
-              return;
-            }
-            _closeSkinToneDialog();
-            _openSkinToneDialog(emoji, emojiSize, categoryEmoji, index);
-          };
+  //           final onLongPressed = () {
+  //             if (!emoji.hasSkinTone || !widget.config.enableSkinTones) {
+  //               _closeSkinToneDialog();
+  //               return;
+  //             }
+  //             _closeSkinToneDialog();
+  //             _openSkinToneDialog(emoji, emojiSize, categoryEmoji, index);
+  //           };
 
-          return _buildButtonWidget(
-            onPressed: onPressed,
-            onLongPressed: onLongPressed,
-            child: _buildEmoji(
-              emojiSize,
-              categoryEmoji,
-              emoji,
-              widget.config.enableSkinTones,
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+  //           return Padding(
+  //             padding: const EdgeInsets.all(5.0),
+  //             child: _buildButtonWidget(
+  //               onPressed: onPressed,
+  //               onLongPressed: onLongPressed,
+  //               child: _buildEmoji(
+  //                 emojiSize,
+  //                 categoryEmoji,
+  //                 emoji,
+  //                 widget.config.enableSkinTones,
+  //               ),
+  //             ),
+  //           );
+  //         }).toList(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Build and display Emoji centered of its parent
-  Widget _buildEmoji(
+  List<Widget> _buildEmoji(
     double emojiSize,
     CategoryEmoji categoryEmoji,
-    Emoji emoji,
+    List<Emoji> emoji,
     bool showSkinToneIndicator,
   ) {
     // FittedBox needed for display, font scale settings
-    return FittedBox(
-      fit: BoxFit.fill,
-      child: Stack(children: [
-        emoji.hasSkinTone && showSkinToneIndicator
-            ? Positioned(
-                bottom: 0,
-                right: 0,
-                child: CustomPaint(
-                  size: const Size(8, 8),
-                  painter: TriangleShape(widget.config.skinToneIndicatorColor),
+    return emoji
+        .map((e) => FittedBox(
+              fit: BoxFit.fill,
+              child: Stack(children: [
+                // emoji.hasSkinTone && showSkinToneIndicator
+                //     ? Positioned(
+                //         bottom: 0,
+                //         right: 0,
+                //         child: CustomPaint(
+                //           size: const Size(8, 8),
+                //           painter: TriangleShape(widget.config.skinToneIndicatorColor),
+                //         ),
+                //       )
+                //     : Container(),
+                Text(
+                  e.emoji,
+                  textScaleFactor: 1.0,
+                  style: TextStyle(
+                    fontSize: emojiSize,
+                    backgroundColor: Colors.transparent,
+                  ),
                 ),
-              )
-            : Container(),
-        Text(
-          emoji.emoji,
-          textScaleFactor: 1.0,
-          style: TextStyle(
-            fontSize: emojiSize,
-            backgroundColor: Colors.transparent,
-          ),
-        ),
-      ]),
-    );
+              ]),
+            ))
+        .toList();
   }
 
   /// Build different Button based on ButtonMode
@@ -342,13 +391,21 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
       width: width,
       height: width,
       child: _buildButtonWidget(
-        onPressed: () {
-          widget.state.onEmojiSelected(categoryEmoji.category, emoji);
-          _closeSkinToneDialog();
-        },
-        onLongPressed: () {},
-        child: _buildEmoji(emojiSize, categoryEmoji, emoji, false),
-      ),
+          onPressed: () {
+            widget.state.onEmojiSelected(categoryEmoji.category, emoji);
+            _closeSkinToneDialog();
+          },
+          onLongPressed: () {},
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: const ScrollPhysics(),
+            controller: _scrollController,
+            child: Wrap(
+              children: [
+                ..._buildEmoji(emojiSize, categoryEmoji, [emoji], false),
+              ],
+            ),
+          )),
     );
   }
 
