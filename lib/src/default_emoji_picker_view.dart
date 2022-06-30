@@ -176,7 +176,6 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
   }
 
   Widget _buildCategory(int index, Category category) {
-    print('Categoryyyyyyyyyyyyyyyyyyyyyyyy${category}');
     return Tab(
       icon: Icon(
         widget.config.getIconForCategory(category),
