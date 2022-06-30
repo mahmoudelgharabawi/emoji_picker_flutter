@@ -391,7 +391,7 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             physics: const ScrollPhysics(),
-            controller: _scrollController,
+            controller: ScrollController(),
             child: Wrap(
               children: [
                 // ..._buildEmoji(emojiSize, categoryEmoji, [emoji], false),
