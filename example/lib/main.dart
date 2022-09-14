@@ -103,12 +103,6 @@ class _MyAppState extends State<MyApp> {
                 height: 250,
                 child: EmojiPicker(
                     onEmojiSelected: (Category category, Emoji emoji) {
-                      print(
-                          'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww${emoji.emoji}');
-                      print(
-                          'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww${category.name}');
-                      print(
-                          'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww${emoji.name}');
                       _onEmojiSelected(emoji);
                     },
                     onBackspacePressed: _onBackspacePressed,
